@@ -1,12 +1,27 @@
-mod test_macro;
+use std::ops::Deref;
 
-fn main(){
-    for i in 1..10{
-        if i >5 {
-            skip!(true);
-        }
-        println!("loop now {}",i);
-    
+// xの中身をバイト列として見るための関数
+fn as_raw_bytes<'a, T:?Sized>(x: &'a T) -> &'a [u8] {
+    unsafe {
+        std::slice::from_raw_parts(
+            x as *const T as *const u8,
+            std::mem::size_of_val(x))
     }
-    println!("break loop");
+}
+
+pub struct S<T:?Sized> {
+    pub x: u8,
+    pub y: T,
+}
+
+fn main() {
+    let strslice = "a";
+    let strslice2 = "a".to_string();
+    println!("strslice = {:?}", as_raw_bytes(strslice));
+    println!("&strslice = {:?}", as_raw_bytes(&strslice));
+    println!("&&strslice = {:?}", as_raw_bytes(&&strslice));
+    
+    // println!("&strslice2 = {:?}", as_raw_bytes(strslice2));
+    println!("&strslice2 = {:?}", as_raw_bytes(&strslice2));
+    println!("&&strslice2 = {:?}", as_raw_bytes(&&strslice2));
 }
