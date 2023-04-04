@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  rusttestdev:
+    image: rusttestdev
+    build:
+      context: .
+      dockerfile: ./Dockerfile
